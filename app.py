@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+# --- Initialize Hotel & User ---
 if "hotel" not in st.session_state:
     class User:
         def __init__(self, unique_id, name, email, contact, city, password):
@@ -52,7 +53,7 @@ if "hotel" not in st.session_state:
 
 hotel = st.session_state.hotel
 
-# --- Streamlit UI ---
+# --- Page Setup ---
 st.set_page_config(page_title="Hotel Deepali", page_icon="🏨", layout="centered")
 st.title("🏨 Hotel Deepali")
 st.caption("Order delicious Veg & Non-Veg food online!")
@@ -63,12 +64,29 @@ choice = st.sidebar.selectbox("Navigation", menu)
 
 # --- Home Page ---
 if choice == "Home":
-    st.image("Hotel1", caption="Welcome to Hotel Deepali", use_container_width=True)
+    try:
+        st.image("Hotel1.png", caption="Welcome to Hotel Deepali", use_container_width=True)
+    except:
+        st.warning("Image 'Hotel1.png' not found.")
     st.subheader("🍽️ Enjoy Delicious Veg & Non-Veg Food")
     st.write("Please register or login to place your order.")
 
 # --- Register Page ---
 elif choice == "Register":
+    st.markdown("""
+        <style>
+        .register-section {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="register-section">', unsafe_allow_html=True)
     st.subheader("📝 Register New User")
     with st.form("register_form"):
         name = st.text_input("Name")
@@ -80,6 +98,7 @@ elif choice == "Register":
         if submit:
             user = hotel.register_user(name, email, contact, city, password)
             st.success(f"User {user.name} registered successfully!")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Login Page ---
 elif choice == "Login":
@@ -97,10 +116,24 @@ elif choice == "Login":
         else:
             st.error("Invalid email or password.")
 
+# --- Logout Page with Confirmation ---
 elif choice == "Logout":
-    st.session_state.user = None
-    st.success("You have been logged out.")
+    st.subheader("⚠️ Are you sure you want to logout?")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        yes = st.button("✅ Yes, Logout")
+    with col2:
+        no = st.button("❌ Cancel")
+    
+    if yes:
+        st.session_state.user = None
+        st.success("You have been logged out.")
+        st.stop()  # Stop app execution to simulate closing
+    if no:
+        st.info("Logout cancelled. You are still logged in.")
 
+# --- Order Page ---
 if "user" in st.session_state and st.session_state.user is not None:
     user = st.session_state.user
     st.subheader(f"🍴 Welcome {user.name}, place your order:")
@@ -122,7 +155,7 @@ if "user" in st.session_state and st.session_state.user is not None:
         place_order = st.form_submit_button("Place Order")
 
     if place_order:
-        user.bill = 0  # Reset previous bill
+        user.bill = 0
         ordered_items = []
 
         for id, qty in veg_selections.items():
@@ -144,7 +177,6 @@ if "user" in st.session_state and st.session_state.user is not None:
             st.info("🍽️ Your order has been delivered!")
             st.balloons()
 
-            # Show order summary
             st.markdown("### 🧾 Order Summary")
             order_df = pd.DataFrame(ordered_items, columns=["Item", "Quantity", "Price (₹)"])
             st.table(order_df)
@@ -156,7 +188,6 @@ if "user" in st.session_state and st.session_state.user is not None:
                 bill_text += f"{item}\t{qty}\t₹{total}\n"
             bill_text += f"\nTotal Bill: ₹{user.bill}"
 
-            # Download button
             st.download_button(
                 label="💾 Download Bill",
                 data=bill_text,
