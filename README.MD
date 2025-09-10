@@ -32,3 +32,14 @@ Welcome to **Hotel Deepali**, a Streamlit-based web application for ordering del
 ```bash
 git clone https://github.com/YOUR_USERNAME/hotel-deepali.git
 cd hotel-deepali
+
+
+## Live Demo
+Try the app online: [Hotel Deepali App](https://sarthak070606-hotel-food-delivery-app-app-7w396a.streamlit.app/)
+
+## Features
+- User Registration & Login
+- Veg & Non-Veg Menu Selection
+- Order Summary & Bill Download
+- Logout Confirmation
+
