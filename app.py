@@ -63,7 +63,8 @@ choice = st.sidebar.selectbox("Navigation", menu)
 
 # --- Home Page ---
 if choice == "Home":
-    st.subheader("Welcome to Hotel Deepali!")
+    st.image("Hotel1", caption="Welcome to Hotel Deepali", use_container_width=True)
+    st.subheader("🍽️ Enjoy Delicious Veg & Non-Veg Food")
     st.write("Please register or login to place your order.")
 
 # --- Register Page ---
