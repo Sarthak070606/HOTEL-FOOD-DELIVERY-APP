@@ -174,7 +174,7 @@ if "user" in st.session_state and st.session_state.user is not None:
 
         if user.bill > 0:
             st.success(f"✅ Order placed successfully! Total bill: ₹{user.bill}")
-            st.info("🍽️ Your order has been delivered!")
+            st.info("🍽️ Your order has been delivered \n It is on the way !")
             st.balloons()
 
             st.markdown("### 🧾 Order Summary")
